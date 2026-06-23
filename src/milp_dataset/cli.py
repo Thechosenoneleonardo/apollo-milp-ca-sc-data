@@ -17,9 +17,9 @@ def main() -> int:
         generate.add_argument(f"--{split}-count", type=int, default=0)
     generate.add_argument("--base-seed", type=int); generate.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); generate.add_argument("--output-root", type=Path, default=repository_root()); generate.add_argument("--force", action="store_true"); generate.add_argument("--no-compress", action="store_true")
     validate = subparsers.add_parser("validate")
-    validate.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); validate.add_argument("--output-root", type=Path, default=repository_root()); validate.add_argument("--strict-solver", action="store_true")
+    validate.add_argument("--problem", choices=["ca", "sc", "all"], default="all"); validate.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); validate.add_argument("--output-root", type=Path, default=repository_root()); validate.add_argument("--strict-solver", action="store_true")
     summarize = subparsers.add_parser("summarize")
-    summarize.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); summarize.add_argument("--output-root", type=Path, default=repository_root())
+    summarize.add_argument("--problem", choices=["ca", "sc", "all"], default="all"); summarize.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); summarize.add_argument("--output-root", type=Path, default=repository_root())
     args = parser.parse_args()
     if args.cmd == "generate":
         config = load_config(args.config); config = DatasetConfig(args.base_seed, config.splits, config.ca, config.sc) if args.base_seed is not None else config
@@ -29,10 +29,10 @@ def main() -> int:
         records = generate_instances(config, problems=["ca", "sc"] if args.problem == "all" else [args.problem], splits=["train", "valid", "test"] if args.split == "all" else [args.split], counts=counts, output_root=args.output_root, force=args.force)
         print(f"manifest contains {len(records)} instance records"); return 0
     if args.cmd == "validate":
-        warnings: list[str] = []; errors = validate_dataset(args.output_root, load_config(args.config).splits, strict_solver=args.strict_solver, warnings=warnings)
+        warnings: list[str] = []; selected = {"ca", "sc"} if args.problem == "all" else {args.problem}; errors = validate_dataset(args.output_root, load_config(args.config).splits, problems=selected, strict_solver=args.strict_solver, warnings=warnings)
         for warning in warnings: print(warning)
         print("validation passed" if not errors else "validation failed:\n" + "\n".join(errors)); return int(bool(errors))
-    records = read_manifest(args.output_root / "metadata" / "manifest.csv"); counts = Counter((record.problem, record.split) for record in records)
+    records = [record for record in read_manifest(args.output_root / "metadata" / "manifest.csv") if args.problem == "all" or record.problem == args.problem]; counts = Counter((record.problem, record.split) for record in records)
     for (problem, split), count in sorted(counts.items()): print(f"{problem}/{split}: {count}")
     print(f"instances: {len(records)}; bytes: {sum(record.size_bytes for record in records)}"); return 0
 if __name__ == "__main__": raise SystemExit(main())

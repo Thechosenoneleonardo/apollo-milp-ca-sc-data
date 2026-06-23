@@ -38,8 +38,9 @@ def _run_solver_reader(compressed_path: Path, reader: SolverReader) -> None:
         if temp_path is not None:
             temp_path.unlink(missing_ok=True)
 
-def validate_dataset(root: Path, expected_counts: dict[str, int] | None = None, *, strict_solver: bool = False, warnings: list[str] | None = None, solver_reader: SolverReader | None = None) -> list[str]:
-    records = read_manifest(root / "metadata" / "manifest.csv")
+def validate_dataset(root: Path, expected_counts: dict[str, int] | None = None, *, problems: set[str] | None = None, strict_solver: bool = False, warnings: list[str] | None = None, solver_reader: SolverReader | None = None) -> list[str]:
+    selected = problems or {"ca", "sc"}
+    records = [record for record in read_manifest(root / "metadata" / "manifest.csv") if record.problem in selected]
     errors: list[str] = []
     notes = warnings if warnings is not None else []
     keys = [record.key for record in records]
@@ -50,7 +51,7 @@ def validate_dataset(root: Path, expected_counts: dict[str, int] | None = None, 
         errors.append("duplicate seed")
     counts = Counter((record.problem, record.split) for record in records)
     if expected_counts is not None:
-        for problem in ("ca", "sc"):
+        for problem in selected:
             for split, expected in expected_counts.items():
                 if counts[(problem, split)] != expected:
                     errors.append(f"{problem}/{split}: expected {expected}, found {counts[(problem, split)]}")
