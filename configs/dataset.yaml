@@ -1,0 +1,24 @@
+# Dataset protocol configuration. Values marked "reproduction assumption" are
+# required because the Apollo-MILP paper does not publicly specify them fully.
+dataset:
+  base_seed: 2025
+  splits:
+    train: 240
+    valid: 60
+    test: 100
+
+ca:
+  n_items: 300
+  n_bids: 1500
+  generator: learn2branch.combinatorial_auction
+  assumptions:
+    - "reproduction assumption: n_bids=1500 is used as the CA target variable scale."
+    - "reproduction assumption: all unspecified learn2branch generator parameters will be versioned here before generation."
+
+sc:
+  nrows: 3000
+  ncols: 5000
+  generator: learn2branch.set_covering
+  assumptions:
+    - "reproduction assumption: learn2branch defaults are not accepted until explicitly versioned here."
+    - "reproduction assumption: any density and coefficient-distribution parameters will be recorded before generation."

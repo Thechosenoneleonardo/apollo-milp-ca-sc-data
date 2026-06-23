@@ -1,0 +1,15 @@
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Uncompressed solver files: only compressed .lp.gz artifacts are versioned.
+*.lp
+
+# Temporary files and logs
+*.tmp
+*.temp
+*.log
+*.bak
+*~
