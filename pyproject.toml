@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "apollo-milp-ca-sc-data"
@@ -22,9 +22,13 @@ dev = [
 [project.scripts]
 milp-dataset = "milp_dataset.cli:main"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["milp_dataset*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/milp_dataset"]

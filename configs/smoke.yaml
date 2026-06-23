@@ -1,0 +1,17 @@
+dataset:
+  base_seed: 2025
+  splits:
+    train: 1
+    valid: 1
+    test: 1
+ca:
+  n_items: 20
+  n_bids: 50
+  add_item_prob: 0.7
+  generator: learn2branch.combinatorial_auction
+sc:
+  nrows: 20
+  ncols: 40
+  density: 0.15
+  max_coef: 10
+  generator: learn2branch.set_covering
