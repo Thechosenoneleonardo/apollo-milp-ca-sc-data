@@ -7,7 +7,7 @@ dataset:
     valid: 60
     test: 100
 ca:
-  n_items: 300
+  n_items: 3000
   n_bids: 1500
   generator: learn2branch.combinatorial_auction
   min_value: 1
