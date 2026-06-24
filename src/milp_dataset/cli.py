@@ -15,7 +15,7 @@ def main() -> int:
     generate.add_argument("--split", choices=["train", "valid", "test", "all"], default="all")
     for split in ("train", "valid", "test"):
         generate.add_argument(f"--{split}-count", type=int, default=0)
-    generate.add_argument("--base-seed", type=int); generate.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); generate.add_argument("--output-root", type=Path, default=repository_root()); generate.add_argument("--force", action="store_true"); generate.add_argument("--no-compress", action="store_true")
+    generate.add_argument("--workers", type=int, default=1); generate.add_argument("--base-seed", type=int); generate.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); generate.add_argument("--output-root", type=Path, default=repository_root()); generate.add_argument("--force", action="store_true"); generate.add_argument("--no-compress", action="store_true")
     validate = subparsers.add_parser("validate")
     validate.add_argument("--problem", choices=["ca", "sc", "all"], default="all"); validate.add_argument("--config", type=Path, default=Path("configs/dataset.yaml")); validate.add_argument("--output-root", type=Path, default=repository_root()); validate.add_argument("--strict-solver", action="store_true")
     summarize = subparsers.add_parser("summarize")
@@ -26,7 +26,7 @@ def main() -> int:
         counts = {split: getattr(args, f"{split}_count") for split in ("train", "valid", "test")}
         if any(count < 0 for count in counts.values()): parser.error("counts must be non-negative")
         if args.no_compress: parser.error("uncompressed LP output is disallowed by repository policy")
-        records = generate_instances(config, problems=["ca", "sc"] if args.problem == "all" else [args.problem], splits=["train", "valid", "test"] if args.split == "all" else [args.split], counts=counts, output_root=args.output_root, force=args.force)
+        records = generate_instances(config, problems=["ca", "sc"] if args.problem == "all" else [args.problem], splits=["train", "valid", "test"] if args.split == "all" else [args.split], counts=counts, output_root=args.output_root, force=args.force, workers=args.workers)
         print(f"manifest contains {len(records)} instance records"); return 0
     if args.cmd == "validate":
         warnings: list[str] = []; selected = {"ca", "sc"} if args.problem == "all" else {args.problem}; errors = validate_dataset(args.output_root, load_config(args.config).splits, problems=selected, strict_solver=args.strict_solver, warnings=warnings)
