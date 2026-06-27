@@ -16,3 +16,6 @@ __pycache__/
 *~
 
 .tmp/
+
+outputs/gurobi/ca_pass*/
+outputs/gurobi/**/gurobi.log
