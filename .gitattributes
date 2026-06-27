@@ -1,1 +1,9 @@
 *.lp.gz filter=lfs diff=lfs merge=lfs -text
+outputs/gurobi/ca_final/**/best.sol filter=lfs diff=lfs merge=lfs -text
+outputs/gurobi/ca_final/**/*.csv filter=lfs diff=lfs merge=lfs -text
+outputs/gurobi/ca_final/**/*.json filter=lfs diff=lfs merge=lfs -text
+data/ca/bg/**/*.npz filter=lfs diff=lfs merge=lfs -text
+data/ca/bg/**/*.pkl filter=lfs diff=lfs merge=lfs -text
+data/ca/solution_pool/**/*.npz filter=lfs diff=lfs merge=lfs -text
+data/ca/solution_pool/**/*.json filter=lfs diff=lfs merge=lfs -text
+data/ca/solution_pool/**/*.csv filter=lfs diff=lfs merge=lfs -text
