@@ -19,3 +19,11 @@ __pycache__/
 
 outputs/gurobi/ca_pass*/
 outputs/gurobi/**/gurobi.log
+
+# Intermediate Gurobi runs
+outputs/gurobi/ca/
+outputs/gurobi/ca_3600/
+outputs/gurobi/ca_pilot/
+outputs/gurobi/ca_primal_test/
+outputs/gurobi/ca_pass*_targets.txt
+outputs/gurobi/ca_pass*_comparison.csv
